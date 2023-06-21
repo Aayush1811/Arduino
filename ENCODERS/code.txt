@@ -1,0 +1,62 @@
+#define inputCLK 4
+#define inputDT 5
+#define green_led 8                            // indicate clockwise rotation
+#define orange_led 9                         // indicate counter clockwise rotation
+
+int counter = 0;
+int previousstateCLK;                      // strore previous state of clk
+int currentstateCLK;
+
+void setup()
+{
+
+Serial.begin(9600);
+
+  // set encoder pins as input
+
+ pinMode(inputCLK,INPUT);
+pinMode(inputDT,INPUT);
+
+// set led pins as o/p
+
+pinMode(green_led,OUTPUT);
+pinMode(orange_led,OUTPUT);
+
+// variable previousstateCLK store previous state of encoder clk pin
+
+previousstateCLK = digitalRead(inputCLK);
+
+}
+
+void loop()
+{
+ currentstateCLK = digitalRead(inputCLK);
+
+if(previousstateCLK != currentstateCLK  )                                // THIS MEANS PULSE OCCURE
+{
+
+  if(digitalRead(inputDT) != digitalRead(inputCLK))                // THIS MEANS ROTATE IN CCW
+   { 
+     
+        counter--;
+        Serial.println("CCW");
+        Serial.print("COUNTER:");
+        Serial.println(counter);
+    }
+   else
+   { 
+        counter++;
+        Serial.println("CW");
+        Serial.print("COUNTER:");
+        Serial.println(counter);
+   
+   }
+  
+  previousstateCLK = currentstateCLK ;
+
+}
+
+ 
+}
+
+
