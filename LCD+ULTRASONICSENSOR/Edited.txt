@@ -1,0 +1,179 @@
+
+#include<LiquidCrystal.h>
+#define RS_pin A5
+#define E_pin A4
+#define pin_4 6
+#define pin_5 10
+#define pin_6 11
+#define pin_7 12
+ float distance;
+
+unsigned long n2 = millis();
+unsigned long m = 10;          // after every 10 ms trigger sensor and give value
+
+unsigned long previoustime = millis();
+unsigned long duration = 100;
+
+int buzzer_state = LOW;
+
+
+
+int echo_pin = 8;
+int trigger_pin = 9;
+int buzzer = 7;
+int blue_led = 5;
+int yellow_led = 4;
+int green_led = 2 ;
+
+
+
+LiquidCrystal lcd(RS_pin,E_pin,pin_4,pin_5,pin_6,pin_7);
+
+
+void setup()
+{
+    
+    Serial.begin(115200);
+    lcd.begin(16,2);
+    pinMode(echo_pin,INPUT);
+    pinMode(trigger_pin,OUTPUT);
+    pinMode(buzzer,OUTPUT);
+    pinMode(blue_led,OUTPUT);
+    pinMode(yellow_led,OUTPUT);
+    pinMode(green_led ,OUTPUT);
+  
+  
+  
+  
+}
+
+void loop()
+{
+  unsigned long n1 = millis();
+  if(n1 - n2 > m)
+  {
+  trigger(trigger_pin);
+ 
+  distance =echo();
+  Serial.println(distance);
+    
+    n2 = n2 + m; 
+  }
+  
+  
+  
+  // distance in centimeter
+  
+  if(distance>5 && distance<=100 )
+  {
+    // blue_led
+    digitalWrite(buzzer, LOW);
+    digitalWrite(blue_led,HIGH);
+     digitalWrite(yellow_led,LOW);
+    digitalWrite(green_led,LOW);
+    
+    
+  }
+   else if(distance>100 && distance<=200 )
+  {
+    // yellow_led
+     digitalWrite(buzzer, LOW);
+    digitalWrite(yellow_led,HIGH);
+     digitalWrite(green_led,LOW);
+    digitalWrite(blue_led,LOW);
+  }
+  else if(distance>200 && distance<=300 )
+  {
+    // green_led
+    digitalWrite(buzzer, LOW);
+    digitalWrite(green_led,HIGH);
+    digitalWrite(blue_led,LOW);
+    digitalWrite(yellow_led,LOW);
+    
+  }
+  else if(distance>300)
+  {
+    // buzzer at 7
+    digitalWrite(green_led,LOW);
+    digitalWrite(blue_led,LOW);
+    digitalWrite(yellow_led,LOW);
+    unsigned long currenttime = millis();
+    if (currenttime  - previoustime > duration)
+    {
+      if(buzzer_state == LOW)
+      {
+        buzzer_state = HIGH;
+      }
+      else
+      {
+        buzzer_state = LOW;
+      }
+      digitalWrite(buzzer, buzzer_state);
+      previoustime = previoustime + duration;
+    }
+  }
+  
+  lcd.setCursor(0,0);
+  lcdprint(distance);
+}
+
+void trigger(int t)
+{
+  
+  digitalWrite(t,LOW);
+  delayMicroseconds(2);
+  digitalWrite(t,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(t,LOW);
+  
+}
+
+double echo()
+{
+  //long start = micros();
+  double duration = pulseIn(echo_pin,HIGH);
+  //long end = micros();
+  //long pduration = end - start;
+  //Serial.print("DURATION:");
+  // Serial.println(pduration);
+  double distance = duration/58.0; // in c.m
+  return distance;
+}
+
+void lcdprint(double distance)
+{
+  
+  if(distance>5 && distance<=100 )
+  {
+    lcd.print("DISTANCE:");
+    lcd.setCursor(0,1);
+    lcd.print(distance);
+    lcd.setCursor(7,1);
+    lcd.print("C.m");
+  }
+   else if(distance>100 && distance<=200 )
+  {
+      lcd.print("DISTANCE:");
+    lcd.setCursor(0,1);
+    lcd.print(distance);
+    lcd.setCursor(7,1);
+    lcd.print("C.m");
+   }
+  else if(distance>200 && distance<=300 )
+  {
+      lcd.print("DISTANCE:");
+    lcd.setCursor(0,1);
+    lcd.print(distance);
+    lcd.setCursor(7,1);
+    lcd.print("C.m");
+   }
+   else if(distance>300 )
+  {
+      lcd.print("DISTANCE:");
+    lcd.setCursor(0,1);
+    lcd.print(distance);
+    lcd.setCursor(7,1);
+    lcd.print("C.m");
+   }
+  
+}
