@@ -1,0 +1,82 @@
+
+int echo_pin = 8;
+int trigger_pin = 9;
+int buzzer = 7;
+int blue_led = 5;
+int yellow_led = 4;
+int green_led = 2 ;
+void setup()
+{
+    Serial.begin(9600);
+    pinMode(echo_pin,INPUT);
+    pinMode(trigger_pin,OUTPUT);
+    pinMode(buzzer,OUTPUT);
+    pinMode(blue_led,OUTPUT);
+    pinMode(yellow_led,OUTPUT);
+    pinMode(green_led ,OUTPUT);
+  // inoitialyy all leds are off
+  
+}
+
+void loop()
+{
+  
+  trigger(trigger_pin);
+  int distance;
+  distance =echo();
+  Serial.println(distance);
+  
+  // distance in centimeter
+  
+  if(distance>5 && distance<=100 )
+  {
+    // blue_led
+    digitalWrite(blue_led,HIGH);
+    delay(1000);
+    digitalWrite(blue_led,LOW);
+    delay(1000);
+  }
+   else if(distance>100 && distance<=200 )
+  {
+    // yellow_led
+    digitalWrite(yellow_led,HIGH);
+    delay(1000);
+    digitalWrite(yellow_led,LOW);
+    delay(1000);
+  }
+  else if(distance>200 && distance<=300 )
+  {
+    // green_led
+    digitalWrite(green_led,HIGH);
+    delay(1000);
+    digitalWrite(green_led,LOW);
+    delay(1000);
+  }
+  else if(distance>300)
+  {
+    // buzzer at 7
+    digitalWrite(buzzer,HIGH);
+    delay(1000);
+    digitalWrite(buzzer,LOW);
+    delay(1000);
+  }
+  
+}
+
+void trigger(int t)
+{
+  
+  digitalWrite(t,LOW);
+  delayMicroseconds(2);
+  digitalWrite(t,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(t,LOW);
+  
+}
+
+double echo()
+{
+  double duration = pulseIn(echo_pin,HIGH);
+  double distance = duration/58.0; // in c.m
+  return distance;
+}
