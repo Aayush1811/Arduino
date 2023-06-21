@@ -1,0 +1,23 @@
+#include<LiquidCrystal.h>
+#define RS_pin A5
+#define E_pin A4
+#define pin_4 4
+#define pin_5 5
+#define pin_6 6
+#define pin_7 7
+int i;
+
+LiquidCrystal lcd(RS_pin,E_pin,pin_4,pin_5,pin_6,pin_7);
+
+void setup()
+{
+  lcd.begin(16,2);
+  lcd.print("HELLO WORLD!!!");
+  
+  
+}
+
+void loop()
+{
+  
+}
